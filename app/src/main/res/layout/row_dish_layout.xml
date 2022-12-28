@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="8dp">
+
+    <CheckBox
+        android:id="@+id/checkbox"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <TextView
+        android:id="@+id/dish_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:layout_marginStart="16dp"
+        android:textSize="20sp"
+        android:textColor="@android:color/black"
+        app:layout_constraintStart_toEndOf="@id/checkbox"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Smoked Chicken and Beef Sausage"/>
+
+    <TextView
+        android:id="@+id/dish_quantities"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:textSize="20sp"
+        android:textColor="@android:color/holo_green_dark"
+        app:layout_constraintStart_toStartOf="@id/dish_name"
+        app:layout_constraintTop_toBottomOf="@id/dish_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="1 Sausage (5 long x 7/8 dia)"/>
+
+    <TextView
+        android:id="@+id/dish_calories"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:textSize="20sp"
+        android:textColor="@android:color/darker_gray"
+        app:layout_constraintStart_toStartOf="@id/dish_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dish_quantities"
+        tools:text="EDI 7% - 94kcal"/>
+
+    <Button
+        android:id="@+id/btn_remove"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@android:color/lighter_gray"
+        android:text="-"
+        android:textSize="24sp"
+        android:textColor="@android:color/black"
+        app:layout_constraintTop_toBottomOf="@id/dish_calories"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/dish_name" />
+
+    <TextView
+        android:id="@+id/text_selected_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="@android:color/black"
+        android:layout_marginStart="24dp"
+        app:layout_constraintStart_toEndOf="@id/btn_remove"
+        app:layout_constraintEnd_toStartOf="@id/btn_add"
+        app:layout_constraintTop_toTopOf="@id/btn_remove"
+        app:layout_constraintBottom_toBottomOf="@id/btn_remove"
+        tools:text="2"/>
+
+    <Button
+        android:id="@+id/btn_add"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:backgroundTint="@android:color/lighter_gray"
+        android:text="+"
+        android:textSize="24sp"
+        android:textColor="@android:color/black"
+        android:layout_marginStart="24dp"
+        app:layout_constraintTop_toTopOf="@id/btn_remove"
+        app:layout_constraintBottom_toBottomOf="@id/btn_remove"
+        app:layout_constraintStart_toEndOf="@id/text_selected_number"/>
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_adjust_selected_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="btn_remove, text_selected_number, btn_add"
+        tools:visibility="gone"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
