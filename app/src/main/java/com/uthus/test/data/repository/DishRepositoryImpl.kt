@@ -17,6 +17,11 @@ class DishRepositoryImpl(
     }
 
     override suspend fun saveSelectedDishes(selectedDishes: List<Dish>): Boolean {
-        return false
+        return try {
+            dishStorage.insertSelectedDishes(selectedDishes)
+            true
+        } catch (ex: Exception) {
+            false
+        }
     }
 }

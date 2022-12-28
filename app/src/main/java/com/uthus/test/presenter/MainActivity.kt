@@ -35,13 +35,22 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnSave.setOnClickListener {
-
+            val selectedDishes = dishAdapter.getData().filter { it.isSelected }.map { it.dish }
+            viewModel.saveSelectedDishes(selectedDishes)
         }
     }
 
     private fun onSyncData() {
         viewModel.dishes.observe(this) { data ->
             dishAdapter.submitList(data ?: emptyList())
+        }
+
+        viewModel.savingResultEvent.observe(this) {
+            if (it) {
+                Toast.makeText(this@MainActivity, "Save data successfully!", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(this@MainActivity, "Save data fail!", Toast.LENGTH_LONG).show()
+            }
         }
     }
 }

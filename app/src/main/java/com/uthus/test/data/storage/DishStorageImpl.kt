@@ -80,14 +80,10 @@ class DishStorageImpl(
     }
 
     override suspend fun insertSelectedDishes(selectedDishes: List<Dish>): Array<Long> {
-        return emptyArray()
+        return dishDao.insertSelectedDishes(selectedDishes)
     }
 
     override suspend fun updateSelectedDishes(selectedDishes: List<Dish>): Int {
-        return 0
-    }
-
-    override suspend fun upsertSelectedDishes(selectedDishes: List<Dish>): Int {
-        return 0
+        return dishDao.updateSelectedDishes(selectedDishes)
     }
 }

@@ -18,6 +18,8 @@ abstract class DishDao {
     @Update(entity = Dish::class)
     abstract suspend fun updateSelectedDishes(selectedDishes: List<Dish>): Int
 
+    // By using OnConflictStrategy.REPLACE, we don't need to check if data is existed to update or do insert in vice versa
+    // Just replace by the newest data
     @Insert(entity = Dish::class, onConflict = OnConflictStrategy.REPLACE)
     abstract suspend fun insertSelectedDishes(selectedDishes: List<Dish>): Array<Long>
 }
