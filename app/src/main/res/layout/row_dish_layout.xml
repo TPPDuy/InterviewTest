@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:maxLines="2"
         android:ellipsize="end"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:textColor="@android:color/holo_green_dark"
         app:layout_constraintStart_toStartOf="@id/dish_name"
         app:layout_constraintTop_toBottomOf="@id/dish_name"
@@ -47,22 +47,20 @@
         android:layout_height="wrap_content"
         android:maxLines="2"
         android:ellipsize="end"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:textColor="@android:color/darker_gray"
         app:layout_constraintStart_toStartOf="@id/dish_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/dish_quantities"
         tools:text="EDI 7% - 94kcal"/>
 
-    <Button
+    <ImageButton
         android:id="@+id/btn_remove"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:layout_marginTop="8dp"
-        android:backgroundTint="@android:color/lighter_gray"
-        android:text="-"
-        android:textSize="24sp"
-        android:textColor="@android:color/black"
+        android:background="@drawable/button_background"
+        android:src="@drawable/ic_vector_minus"
         app:layout_constraintTop_toBottomOf="@id/dish_calories"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@id/dish_name" />
@@ -71,7 +69,7 @@
         android:id="@+id/text_selected_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:textColor="@android:color/black"
         android:layout_marginStart="24dp"
         app:layout_constraintStart_toEndOf="@id/btn_remove"
@@ -80,14 +78,12 @@
         app:layout_constraintBottom_toBottomOf="@id/btn_remove"
         tools:text="2"/>
 
-    <Button
+    <ImageButton
         android:id="@+id/btn_add"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:backgroundTint="@android:color/lighter_gray"
-        android:text="+"
-        android:textSize="24sp"
-        android:textColor="@android:color/black"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:background="@drawable/button_background"
+        android:src="@drawable/ic_vector_add"
         android:layout_marginStart="24dp"
         app:layout_constraintTop_toTopOf="@id/btn_remove"
         app:layout_constraintBottom_toBottomOf="@id/btn_remove"
@@ -98,5 +94,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:constraint_referenced_ids="btn_remove, text_selected_number, btn_add"
-        tools:visibility="gone"/>
+        tools:visibility="visible"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

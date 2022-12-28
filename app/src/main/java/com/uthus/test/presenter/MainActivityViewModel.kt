@@ -1,6 +1,5 @@
 package com.uthus.test.presenter
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,9 +8,8 @@ import com.uthus.test.data.model.Dish
 import com.uthus.test.domain.DishRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -35,9 +33,24 @@ class MainActivityViewModel @Inject constructor(
                 dishRepository.getSelectedDishes()
             ) { fakeDishesData, selectedDishes ->
                 // merge to 1 list
-                emptyList<Dish>()
+                val selectedMap = selectedDishes.associate {
+                    Pair(it.name, it.numOfSelected)
+                }
+
+                fakeDishesData.map {
+                    val selectedNumber = selectedMap[it.name]
+                    if (selectedNumber != null) {
+                        it.copy(
+                            numOfSelected = selectedNumber
+                        )
+                    } else {
+                        it
+                    }
+                }
             }.onStart {
                 _dishes.postValue(DataResult.loading(null))
+            }.catch { e ->
+                _dishes.postValue(DataResult.error(e))
             }.collect {
                 _dishes.postValue(DataResult.success(it))
             }
