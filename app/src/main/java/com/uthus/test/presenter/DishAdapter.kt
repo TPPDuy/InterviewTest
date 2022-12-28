@@ -3,40 +3,73 @@ package com.uthus.test.presenter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.CheckBox
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.uthus.test.R
-import com.uthus.test.data.model.Dish
 
-class DishAdapter(
-    onChangeSelectedNumber: (Dish, Int, Int) -> Unit
-): ListAdapter<Dish, DishAdapter.DishViewHolder>(
-    object: DiffUtil.ItemCallback<Dish>() {
-        override fun areItemsTheSame(oldItem: Dish, newItem: Dish): Boolean {
-            return false//oldItem == newItem
-        }
+class DishAdapter(): RecyclerView.Adapter<DishAdapter.DishViewHolder>() {
 
-        override fun areContentsTheSame(oldItem: Dish, newItem: Dish): Boolean {
-            return false//oldItem.name == newItem.name && oldItem.quantity == newItem.quantity && oldItem.calories == newItem.calories
-        }
+    private val mData: MutableList<DisplayingDish> = mutableListOf()
+
+    fun submitList(data: List<DisplayingDish>) {
+        val diffResult = DiffUtil.calculateDiff(DisplayingDishDiff(mData, data))
+        diffResult.dispatchUpdatesTo(this)
+        mData.clear()
+        mData.addAll(data)
     }
-) {
+
+    fun getData(): List<DisplayingDish> {
+        return mData
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DishViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.row_dish_layout, parent, false)
+        return DishViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: DishViewHolder, position: Int) {
+        val displayingDish = mData[position]
+        val dish = displayingDish.dish
+        holder.groupAdjustSelectedNumber.isVisible = false
+        holder.checkBox.isChecked = displayingDish.isSelected
+        holder.dishNameTextView.text = dish.name
+        holder.dishQuantitiesTextView.text = dish.quantity
+        holder.dishCaloriesTextView.text = "${dish.calories} kcal"
+        holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
+            holder.groupAdjustSelectedNumber.isVisible = isChecked
+            displayingDish.isSelected = isChecked
+        }
+
+        holder.buttonRemove.setOnClickListener {
+            if (dish.numOfSelected > 0) {
+                dish.numOfSelected--
+                holder.selectedNumberTextView.text = dish.numOfSelected.toString()
+            }
+        }
+        holder.buttonAdd.setOnClickListener {
+            dish.numOfSelected++
+            holder.selectedNumberTextView.text = dish.numOfSelected.toString()
+        }
+        holder.selectedNumberTextView.text = dish.numOfSelected.toString()
+    }
+
+    override fun getItemCount(): Int {
+        return mData.size
+    }
 
     class DishViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val checkBox: CheckBox
-        private val dishNameTextView: TextView
-        private val dishQuantitiesTextView: TextView
-        private val dishCaloriesTextView: TextView
-        private val buttonRemove: ImageButton
-        private val buttonAdd: ImageButton
-        private val selectedNumberTextView: TextView
-        private val groupAdjustSelectedNumber: View
+        val checkBox: CheckBox
+        val dishNameTextView: TextView
+        val dishQuantitiesTextView: TextView
+        val dishCaloriesTextView: TextView
+        val buttonRemove: ImageButton
+        val buttonAdd: ImageButton
+        val selectedNumberTextView: TextView
+        val groupAdjustSelectedNumber: View
 
         init {
             checkBox = view.findViewById(R.id.checkbox)
@@ -47,29 +80,40 @@ class DishAdapter(
             buttonAdd = view.findViewById(R.id.btn_add)
             selectedNumberTextView = view.findViewById(R.id.text_selected_number)
             groupAdjustSelectedNumber = view.findViewById(R.id.group_adjust_selected_number)
-            groupAdjustSelectedNumber.isVisible = false
         }
+    }
 
-        fun bindData(dish: Dish) {
-            dishNameTextView.text = dish.name
-            dishQuantitiesTextView.text = dish.quantity
-            dishCaloriesTextView.text = "${dish.calories} kcal"
-            checkBox.setOnCheckedChangeListener { _, isChecked ->
-                groupAdjustSelectedNumber.isVisible = isChecked
+    class DisplayingDishDiff(
+        private val oldList: List<DisplayingDish>,
+        private val newList: List<DisplayingDish>
+    ): DiffUtil.Callback() {
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return try {
+                val oldItem = oldList[oldItemPosition]
+                val newItem = newList[newItemPosition]
+                oldItem == newItem
+            } catch (ex: Exception) {
+                false
             }
-            buttonRemove.setOnClickListener {  }
-            buttonAdd.setOnClickListener {  }
-            selectedNumberTextView.text = dish.numOfSelected.toString()
         }
-    }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DishViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.row_dish_layout, parent, false)
-        return DishViewHolder(view)
-    }
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return try {
+                val oldItem = oldList[oldItemPosition]
+                val newItem = newList[newItemPosition]
+                oldItem == newItem
+            } catch (ex: Exception) {
+                false
+            }
+        }
 
-    override fun onBindViewHolder(holder: DishViewHolder, position: Int) {
-        val dish = getItem(position)
-        holder.bindData(dish)
+        override fun getNewListSize(): Int {
+            return newList.size
+        }
+
+        override fun getOldListSize(): Int {
+            return oldList.size
+        }
     }
 }

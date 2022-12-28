@@ -4,7 +4,7 @@ import com.uthus.test.data.model.Dish
 import kotlinx.coroutines.flow.Flow
 
 interface DishRepository {
-    fun getFakeDishesData(): Flow<List<Dish>>
-    fun getSelectedDishes(): Flow<List<Dish>>
-    fun saveSelectedDishes(selectedDishes: List<Dish>): Boolean
+    suspend fun getFakeDishesData(): List<Dish>
+    suspend fun getSelectedDishes(): List<Dish>
+    suspend fun saveSelectedDishes(selectedDishes: List<Dish>): Boolean
 }

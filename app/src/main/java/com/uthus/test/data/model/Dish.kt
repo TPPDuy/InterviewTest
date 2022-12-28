@@ -17,5 +17,5 @@ data class Dish(
     @ColumnInfo(name = "expiry")
     val expiry: String,
     @ColumnInfo(name = "numOfSelected")
-    val numOfSelected: Int = 0,
+    var numOfSelected: Int = 0,
 ): Serializable

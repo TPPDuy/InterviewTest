@@ -1,16 +1,10 @@
 package com.uthus.test.presenter
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.uthus.test.data.model.Dish
 import com.uthus.test.domain.DishRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,8 +13,11 @@ class MainActivityViewModel @Inject constructor(
     private val dishRepository: DishRepository
 ): ViewModel() {
 
-    private val _dishes = MutableLiveData<DataResult<List<Dish>>>()
-    val dishes: LiveData<DataResult<List<Dish>>> = _dishes
+    private val _dishes = MutableLiveData<List<DisplayingDish>>()
+    val dishes: LiveData<List<DisplayingDish>> = _dishes
+
+    private val _modifyingDishes = MutableLiveData<MutableList<Dish>>(mutableListOf())
+    val modifyingDishes: LiveData<MutableList<Dish>> = _modifyingDishes
 
     init {
         fetchDishesData()
@@ -28,36 +25,59 @@ class MainActivityViewModel @Inject constructor(
 
     private fun fetchDishesData() {
         viewModelScope.launch(Dispatchers.IO) {
-            combine(
-                dishRepository.getFakeDishesData(),
-                dishRepository.getSelectedDishes()
-            ) { fakeDishesData, selectedDishes ->
-                // merge to 1 list
-                val selectedMap = selectedDishes.associate {
-                    Pair(it.name, it.numOfSelected)
-                }
+            val selectedDishes = dishRepository.getSelectedDishes()
+            val data = dishRepository.getFakeDishesData()
 
-                fakeDishesData.map {
-                    val selectedNumber = selectedMap[it.name]
-                    if (selectedNumber != null) {
-                        it.copy(
-                            numOfSelected = selectedNumber
-                        )
-                    } else {
-                        it
-                    }
+            val selectedDishesMap = selectedDishes.associate {
+                Pair(it.name, it.numOfSelected)
+            }
+
+            val mappedData = data.map {
+                val selectedNumber = selectedDishesMap[it.name]
+                if (selectedNumber != null) {
+                    it.numOfSelected = selectedNumber
                 }
-            }.onStart {
-                _dishes.postValue(DataResult.loading(null))
-            }.catch { e ->
-                _dishes.postValue(DataResult.error(e))
-            }.collect {
-                _dishes.postValue(DataResult.success(it))
+                DisplayingDish(it, false)
+            }
+
+            _dishes.postValue(mappedData)
+        }
+    }
+
+
+    /*fun updateSelectedDishes(selectedDish: Dish, updatedValue: Int) {
+        if (updatedValue < 0) return
+        val modifyingData = modifyingDishes.value ?: return
+        for (item in modifyingData) {
+            if (item.name == selectedDish.name) {
+                item.numOfSelected = updatedValue
+                _modifyingDishes.value = modifyingData
+                return
+            }
+        }
+        selectedDish.numOfSelected = updatedValue
+        modifyingData.add(selectedDish)
+    }*/
+
+    fun selectDish(dish: Dish) {
+        val currentData = _dishes.value ?: return
+        for (item in currentData) {
+            if (item.dish.name == dish.name) {
+                item.isSelected = true
+                _dishes.value = currentData
+                return
             }
         }
     }
 
-    fun updateSelectedDishes(selectedDish: List<Dish>) {
-
+    fun unselectDish(dish: Dish) {
+        val currentData = _dishes.value ?: return
+        for (item in currentData) {
+            if (item.dish.name == dish.name) {
+                item.isSelected = false
+                _dishes.value = currentData
+                return
+            }
+        }
     }
 }

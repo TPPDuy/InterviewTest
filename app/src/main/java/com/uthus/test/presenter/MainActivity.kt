@@ -27,35 +27,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onSyncView() {
-        dishAdapter = DishAdapter() { selectedDish, numOfSelected, position ->
-
-        }
+        dishAdapter = DishAdapter()
 
         binding.recyclerView.apply {
             adapter = dishAdapter
             layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
         }
+
+        binding.btnSave.setOnClickListener {
+
+        }
     }
 
     private fun onSyncData() {
-        viewModel.dishes.observe(this) { dataResult ->
-            when(dataResult.status) {
-                DataResult.Status.LOADING -> {
-                    binding.progress.isVisible = true
-                    binding.btnSave.isVisible = false
-                }
-                DataResult.Status.SUCCESS -> {
-                    binding.progress.isVisible = false
-                    binding.btnSave.isVisible = true
-                    binding.btnSave.isEnabled = true
-                    dishAdapter.submitList(dataResult.data ?: emptyList())
-                }
-                DataResult.Status.ERROR -> {
-                    binding.progress.isVisible = false
-                    binding.btnSave.isVisible = true
-                    binding.btnSave.isEnabled = false
-                }
-            }
+        viewModel.dishes.observe(this) { data ->
+            dishAdapter.submitList(data ?: emptyList())
         }
     }
 }

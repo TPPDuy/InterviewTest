@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.Flow
 abstract class DishDao {
     @Transaction
     @Query("SELECT * FROM Dish")
-    abstract fun getSelectedDishes(): Flow<List<Dish>>
+    abstract suspend fun getSelectedDishes(): List<Dish>
 
     @Update(entity = Dish::class)
     abstract suspend fun updateSelectedDishes(selectedDishes: List<Dish>): Int

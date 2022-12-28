@@ -9,14 +9,14 @@ import kotlinx.coroutines.flow.flow
 class DishRepositoryImpl(
     private val dishStorage: DishStorage
 ): DishRepository {
-    override fun getFakeDishesData(): Flow<List<Dish>> {
+    override suspend fun getFakeDishesData(): List<Dish> {
         return dishStorage.getFakeDishesData()
     }
-    override fun getSelectedDishes(): Flow<List<Dish>> {
+    override suspend fun getSelectedDishes(): List<Dish> {
         return dishStorage.getSelectedDishes()
     }
 
-    override fun saveSelectedDishes(selectedDishes: List<Dish>): Boolean {
+    override suspend fun saveSelectedDishes(selectedDishes: List<Dish>): Boolean {
         return false
     }
 }

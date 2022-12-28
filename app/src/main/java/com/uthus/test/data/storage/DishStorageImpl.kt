@@ -70,25 +70,24 @@ class DishStorageImpl(
             expiry = "00:00:00, 01-10-2023"
         )
     )
-    override fun getFakeDishesData(): Flow<List<Dish>> {
-        return flow {
-            emit(fakeData)
-        }
+
+    override suspend fun getFakeDishesData(): List<Dish> {
+        return fakeData
     }
 
-    override fun getSelectedDishes(): Flow<List<Dish>> {
+    override suspend fun getSelectedDishes(): List<Dish> {
         return dishDao.getSelectedDishes()
     }
 
-    override fun insertSelectedDishes(selectedDishes: List<Dish>): Array<Long> {
+    override suspend fun insertSelectedDishes(selectedDishes: List<Dish>): Array<Long> {
         return emptyArray()
     }
 
-    override fun updateSelectedDishes(selectedDishes: List<Dish>): Int {
+    override suspend fun updateSelectedDishes(selectedDishes: List<Dish>): Int {
         return 0
     }
 
-    override fun upsertSelectedDishes(selectedDishes: List<Dish>): Int {
+    override suspend fun upsertSelectedDishes(selectedDishes: List<Dish>): Int {
         return 0
     }
 }

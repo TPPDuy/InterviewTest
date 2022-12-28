@@ -4,17 +4,17 @@ import com.uthus.test.data.model.Dish
 import kotlinx.coroutines.flow.Flow
 
 interface DishStorage {
-    fun getFakeDishesData(): Flow<List<Dish>>
+    suspend fun getFakeDishesData(): List<Dish>
 
-    fun getSelectedDishes(): Flow<List<Dish>>
+    suspend fun getSelectedDishes(): List<Dish>
 
-    fun insertSelectedDishes(selectedDishes: List<Dish>): Array<Long>
-    fun updateSelectedDishes(selectedDishes: List<Dish>): Int
+    suspend fun insertSelectedDishes(selectedDishes: List<Dish>): Array<Long>
+    suspend fun updateSelectedDishes(selectedDishes: List<Dish>): Int
 
     /**
      * If a dish is already existed in DB -> update its value
      * Else -> insert to Db
      * ->> That's why I call this function is "upsert"
      */
-    fun upsertSelectedDishes(selectedDishes: List<Dish>): Int
+    suspend fun upsertSelectedDishes(selectedDishes: List<Dish>): Int
 }
