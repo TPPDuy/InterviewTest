@@ -27,7 +27,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onSyncView() {
-        dishAdapter = DishAdapter()
+        dishAdapter = DishAdapter() {
+            viewModel.changeSelectedState(it)
+        }
 
         binding.recyclerView.apply {
             adapter = dishAdapter
@@ -46,10 +48,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         viewModel.savingResultEvent.observe(this) {
-            if (it) {
-                Toast.makeText(this@MainActivity, "Save data successfully!", Toast.LENGTH_LONG).show()
+            val isSuccess = it.getContentIfNotHandled() ?: return@observe
+            if (isSuccess) {
+                Toast.makeText(this@MainActivity, "Save data successfully!", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(this@MainActivity, "Save data fail!", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@MainActivity, "Save data fail!", Toast.LENGTH_SHORT).show()
             }
         }
     }

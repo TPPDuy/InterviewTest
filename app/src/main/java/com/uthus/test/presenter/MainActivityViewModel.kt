@@ -17,8 +17,11 @@ class MainActivityViewModel @Inject constructor(
     private val _dishes = MutableLiveData<List<DisplayingDish>>()
     val dishes: LiveData<List<DisplayingDish>> = _dishes
 
-    private val _savingResultEvent = MutableLiveData<Boolean>()
-    val savingResultEvent: LiveData<Boolean> = _savingResultEvent
+    // Because it is LiveData so whenever our MainActivity is recreated -> it observes this event and show message "Save data successfully" or "Save data fail"
+    // -> It makes user feels confused "I did save data successfully, but when I rotate my screen, app shows this message again!!!!"
+    // -> That's why I create a helper class called "SingleEvent". In MainActivity, we only handle event that is not handled yet, else just ignore it
+    private val _savingResultEvent = MutableLiveData<SingleEvent<Boolean>>()
+    val savingResultEvent: LiveData<SingleEvent<Boolean>> = _savingResultEvent
 
     init {
         fetchDishesData()
@@ -33,6 +36,7 @@ class MainActivityViewModel @Inject constructor(
                 Pair(it.name, it.numOfSelected)
             }
 
+            // The code below help me to show the latest selected number (that we saved in DB) if user select this dish again
             val mappedData = data.map {
                 val selectedNumber = selectedDishesMap[it.name]
                 if (selectedNumber != null) {
@@ -48,7 +52,24 @@ class MainActivityViewModel @Inject constructor(
     fun saveSelectedDishes(selectedDishes: List<Dish>) {
         viewModelScope.launch(Dispatchers.IO) {
             val result = dishRepository.saveSelectedDishes(selectedDishes)
-            _savingResultEvent.postValue(result)
+            _savingResultEvent.postValue(SingleEvent(result))
         }
+    }
+
+    fun changeSelectedState(dish: Dish) {
+        val currentData = _dishes.value?.toMutableList() ?: return
+        val dishPos = findDishPosition(currentData, dish)
+        if (dishPos < 0) return
+        currentData[dishPos].isSelected = !currentData[dishPos].isSelected
+        _dishes.value = currentData
+    }
+
+    private fun findDishPosition(listDishes: List<DisplayingDish>, dish: Dish): Int {
+        for (pos in listDishes.indices) {
+            if (listDishes[pos].dish.name == dish.name) {
+                return pos
+            }
+        }
+        return -1
     }
 }
