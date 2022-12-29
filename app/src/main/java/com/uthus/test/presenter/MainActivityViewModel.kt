@@ -55,21 +55,4 @@ class MainActivityViewModel @Inject constructor(
             _savingResultEvent.postValue(SingleEvent(result))
         }
     }
-
-    fun changeSelectedState(dish: Dish) {
-        val currentData = _dishes.value?.toMutableList() ?: return
-        val dishPos = findDishPosition(currentData, dish)
-        if (dishPos < 0) return
-        currentData[dishPos].isSelected = !currentData[dishPos].isSelected
-        _dishes.value = currentData
-    }
-
-    private fun findDishPosition(listDishes: List<DisplayingDish>, dish: Dish): Int {
-        for (pos in listDishes.indices) {
-            if (listDishes[pos].dish.name == dish.name) {
-                return pos
-            }
-        }
-        return -1
-    }
 }

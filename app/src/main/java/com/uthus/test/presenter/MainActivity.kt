@@ -27,9 +27,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onSyncView() {
-        dishAdapter = DishAdapter() {
-            viewModel.changeSelectedState(it)
-        }
+        dishAdapter = DishAdapter()
 
         binding.recyclerView.apply {
             adapter = dishAdapter
@@ -37,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnSave.setOnClickListener {
-            val selectedDishes = dishAdapter.getData().filter { it.isSelected }.map { it.dish }
+            val selectedDishes = dishAdapter.currentList.filter { it.isSelected }.map { it.dish }
             viewModel.saveSelectedDishes(selectedDishes)
         }
     }

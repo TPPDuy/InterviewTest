@@ -54,6 +54,19 @@
         app:layout_constraintTop_toBottomOf="@id/dish_quantities"
         tools:text="EDI 7% - 94kcal"/>
 
+    <TextView
+        android:id="@+id/dish_expiry"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:textSize="18sp"
+        android:textColor="@android:color/holo_red_light"
+        app:layout_constraintStart_toStartOf="@id/dish_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dish_calories"
+        tools:text="Expired in: 23:45:12, 23d"/>
+
     <ImageButton
         android:id="@+id/btn_remove"
         android:layout_width="32dp"
@@ -61,7 +74,7 @@
         android:layout_marginTop="8dp"
         android:background="@drawable/button_background"
         android:src="@drawable/ic_vector_minus"
-        app:layout_constraintTop_toBottomOf="@id/dish_calories"
+        app:layout_constraintTop_toBottomOf="@id/dish_expiry"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@id/dish_name" />
 
