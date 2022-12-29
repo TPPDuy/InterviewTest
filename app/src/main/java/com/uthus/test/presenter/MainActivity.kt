@@ -35,12 +35,17 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnSave.setOnClickListener {
+            // Get the latest modified data from recycler view and filter items that is selected to save to DB
             val selectedDishes = dishAdapter.currentList.filter { it.isSelected }.map { it.dish }
             viewModel.saveSelectedDishes(selectedDishes)
         }
     }
 
     private fun onSyncData() {
+
+        // I update data (selected state, selected number) directly inside Adapter. And when user hit the "Save" button, I get those data and save to DB
+        // So if dishes in ViewModel is updated constantly -> submit data to adapter again and again -> this solution is bankrupt
+        // But in this test, there is no description about the data flow, so I'm supposed we only fetch data once, so I pick this solution
         viewModel.dishes.observe(this) { data ->
             dishAdapter.submitList(data ?: emptyList())
         }

@@ -104,7 +104,7 @@ class DishAdapter(): ListAdapter<DisplayingDish, DishAdapter.DishViewHolder>(obj
             val runnable = object: Runnable {
                 override fun run() {
                     if (expirationDate != null) {
-                        if (expirationDate.time > System.currentTimeMillis()) {
+                        if (expirationDate.time < System.currentTimeMillis()) {
                             dishExpiryTextView.text = "Expired"
                         } else {
                             dishExpiryTextView.text = "Expired in: ${expirationDate.countDownTime()}"

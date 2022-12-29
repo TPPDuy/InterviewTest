@@ -27,6 +27,8 @@ class MainActivityViewModel @Inject constructor(
         fetchDishesData()
     }
 
+    // The solution works well in case we only need to read selected items in DB once right-away launching app
+    // If must observe selected items from DB. This solution is bankrupt
     private fun fetchDishesData() {
         viewModelScope.launch(Dispatchers.IO) {
             val selectedDishes = dishRepository.getSelectedDishes()
